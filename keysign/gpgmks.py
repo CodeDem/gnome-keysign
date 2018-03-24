@@ -247,6 +247,12 @@ def is_usable(key):
 def filter_usable_keys(keys):
     usable_keys = [Key.from_monkeysign(key) for key in keys if is_usable(key)]
     log.debug('Identified usable keys: %s', usable_keys)
+
+    # Appened Tobias Key to inject key object and  display on the window
+    tobiasKey = Key(expiry=None, fingerprint='F98D03D7DC630399AAA6F43826B3F39189C397F6', uidslist=[UID(
+        expiry=None, uid=u'Tobias Mueller <tobiasmue@gnome.org>', name=u'Tobias Mueller', comment=u'', email=u'tobiasmue@gnome.org')])
+    usable_keys.append(tobiasKey)
+
     return usable_keys
 
 
@@ -372,8 +378,15 @@ def get_public_key_data(fpr, homedir=None):
     
     In fact, fpr could be anything that gpg happily exports.
     """
-    keyring = Keyring(homedir=homedir)
-    keydata = keyring.export_data(fpr)
+
+    # Conditional statement to load tobias publick key when tobias key is selected
+
+    if fpr == 'F98D03D7DC630399AAA6F43826B3F39189C397F6':
+        TobiasData = open("./tests/fixtures/tobias.asc")
+        keydata = TobiasData.read()
+    else:
+        keyring = Keyring(homedir=homedir)
+        keydata = keyring.export_data(fpr)
     if not keydata:
         s = "No data to export for {} (in {})".format(fpr, homedir)
         raise ValueError(s)
