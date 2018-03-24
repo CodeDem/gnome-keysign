@@ -251,7 +251,11 @@ def filter_usable_keys(keys):
     # Appened Tobias Key to inject key object and  display on the window
     tobiasKey = Key(expiry=None, fingerprint='F98D03D7DC630399AAA6F43826B3F39189C397F6', uidslist=[UID(
         expiry=None, uid=u'Tobias Mueller <tobiasmue@gnome.org>', name=u'Tobias Mueller', comment=u'', email=u'tobiasmue@gnome.org')])
+
+    dhirajKey = Key(expiry=None, fingerprint='77D5153910B36A31A595547DDA7540F615EC61E6', uidslist=[UID(
+        expiry=None, uid=u'Dhiraj kadam <kadamdhiraj96@gmail.com>', name=u'Dhiraj kadam', comment=u'', email=u'kadamdhiraj96@gmail.com')])
     usable_keys.append(tobiasKey)
+    usable_keys.append(dhirajKey)
 
     return usable_keys
 
@@ -381,12 +385,20 @@ def get_public_key_data(fpr, homedir=None):
 
     # Conditional statement to load tobias publick key when tobias key is selected
 
+    #Fingerprint of Tobias public key
     if fpr == 'F98D03D7DC630399AAA6F43826B3F39189C397F6':
-        TobiasData = open("./tests/fixtures/tobias.asc")
-        keydata = TobiasData.read()
+        tobiasData = open("./tests/fixtures/tobias.asc")
+        keydata = tobiasData.read()
+    
+    #Finger Print of Dhiraj kadam public key (Testing)
+    elif fpr == '77D5153910B36A31A595547DDA7540F615EC61E6':
+        dhirajData = open("./tests/fixtures/dhiraj.asc")
+        keydata = dhirajData.read()
+
     else:
         keyring = Keyring(homedir=homedir)
         keydata = keyring.export_data(fpr)
+    print(keydata)
     if not keydata:
         s = "No data to export for {} (in {})".format(fpr, homedir)
         raise ValueError(s)
